@@ -16,6 +16,10 @@ var validator = require('validator');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
+
+//console.log(ToDo.schema.paths);
+
+
 function CreateToDo(req, res){
 
     logger.debug("DVP-ToDoListService.CreateToDo Internal method ");
