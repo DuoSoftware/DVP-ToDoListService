@@ -52,6 +52,7 @@ function CreateToDo(req, res){
                     priority: req.body.priority,
                     created_at: time,
                     updated_at: time,
+                    note: req.body.note,
                     due_at: due,
                     owner: user.id,
 
@@ -102,10 +103,6 @@ function CreateToDo(req, res){
             }
         }
     });
-
-
-
-
 };
 
 function RemindToDo(req, res){
@@ -381,6 +378,87 @@ function UpdateToDoCheck(req, res){
 
 };
 
+function UpdateToDoReminder(req, res){
+
+
+    logger.debug("DVP-ToDoListService.UpdateToDoCheck Internal method ");
+    var company = parseInt(req.user.company);
+    var tenant = parseInt(req.user.tenant);
+
+    var due;
+    if(req.body && req.body.due_at)
+        due = new Date(req.body.due_at).toISOString();
+
+    var jsonString;
+
+    User.findOne({username: req.user.iss, company: company, tenant: tenant}, function (err, user) {
+        if (err) {
+            jsonString = messageFormatter.FormatMessage(err, "Get User Failed", false, undefined);
+            res.end(jsonString);
+        }
+        else {
+            if (user && due) {
+
+                ToDo.findOneAndUpdate({_id: req.params.id, owner: user.id, company: company, tenant: tenant}, {due_at: due},function(err, obj) {
+                    if (err) {
+                        jsonString = messageFormatter.FormatMessage(err, "Update ToDo Failed", false, undefined);
+                        res.end(jsonString);
+                    }else {
+                        if (obj) {
+                            jsonString = messageFormatter.FormatMessage(err, "Update ToDo Successful", true, obj);
+
+                            if(obj.due_at) {
+
+                                var date = moment(obj.due_at)
+                                var now = moment();
+
+                                if (now < date) {
+                                    var mainServer = format("http://{0}/DVP/API/{1}/ToDo/{2}/Reminder", config.LBServer.ip, config.Host.version, obj.id);
+
+                                    if (validator.isIP(config.LBServer.ip))
+                                        mainServer = format("http://{0}:{1}/DVP/API/{2}/ToDo/{3}/Reminder", config.LBServer.ip, config.LBServer.port, config.Host.version,obj.id);
+
+
+                                    cronservice.RegisterCronJob(company,tenant,due,req.body.id,mainServer,req.user.iss,function(isSuccess){
+
+                                        if(isSuccess) {
+                                            jsonString = messageFormatter.FormatMessage(undefined, "ToDo and cron saved successfully", true, obj);
+                                        }
+                                        else
+                                        {
+                                            jsonString = messageFormatter.FormatMessage(undefined, "ToDo saved but cron failed", false, obj);
+                                        }
+                                        res.end(jsonString);
+
+                                    });
+                                }else {
+                                    jsonString = messageFormatter.FormatMessage(undefined, "Checked ToDo Successful but due already passed ", false, obj);
+                                    res.end(jsonString);
+                                }
+
+                            }else{
+
+                                jsonString = messageFormatter.FormatMessage(undefined, "Checked ToDo Successful no due", true, obj);
+                                res.end(jsonString);
+
+                            }
+
+                        }else{
+                            jsonString = messageFormatter.FormatMessage(undefined, "No ToDo Found", false, undefined);
+                            res.end(jsonString);
+                        }
+                    }
+                });
+            }
+            else {
+                jsonString = messageFormatter.FormatMessage(undefined, "Get User Failed Or due date issue", false, undefined);
+                res.end(jsonString);
+            }
+        }
+    });
+
+};
+
 function UpdateToDoNote(req, res){
 
 
@@ -491,3 +569,4 @@ module.exports.UpdateToDoCheck = UpdateToDoCheck;
 module.exports.UpdateToDoNote = UpdateToDoNote;
 module.exports.UpdateToDoSnooze = UpdateToDoSnooze;
 module.exports.RemindToDo = RemindToDo;
+module.exports.UpdateToDoReminder =UpdateToDoReminder;
