@@ -54,27 +54,12 @@ module.exports = {
     },
     "Services" : {
         "accessToken": "HOST_TOKEN",
-        "resourceServiceHost": "SYS_RESOURCESERVICE_HOST",
-        "resourceServicePort": "SYS_RESOURCESERVICE_PORT",
-        "resourceServiceVersion": "SYS_RESOURCESERVICE_VERSION",
-        "sipuserendpointserviceHost": "SYS_SIPUSERENDPOINTSERVICE_HOST",
-        "sipuserendpointservicePort": "SYS_SIPUSERENDPOINTSERVICE_PORT",
-        "sipuserendpointserviceVersion": "SYS_SIPUSERENDPOINTSERVICE_VERSION",
-        "clusterconfigserviceHost": "SYS_CLUSTERCONFIG_HOST",
-        "clusterconfigservicePort": "SYS_CLUSTERCONFIG_PORT",
-        "clusterconfigserviceVersion": "SYS_CLUSTERCONFIG_VERSION",
-        "ardsServiceHost": "SYS_ARDSLITESERVICE_HOST",
-        "ardsServicePort": "SYS_ARDSLITESERVICE_PORT",
-        "ardsServiceVersion": "SYS_ARDSLITESERVICE_VERSION",
         "notificationServiceHost": "SYS_NOTIFICATIONSERVICE_HOST",
         "notificationServicePort": "SYS_NOTIFICATIONSERVICE_PORT",
         "notificationServiceVersion": "SYS_NOTIFICATIONSERVICE_VERSION",
-        "scheduleWorkerHost": "SYS_SCHEDULEWORKER_HOST",
-        "scheduleWorkerPort": "SYS_SCHEDULEWORKER_PORT",
-        "scheduleWorkerVersion": "SYS_SCHEDULEWORKER_VERSION",
-        "cronurl": "SYS_CRONSERVICE_HOST",
-        "cronport": 'SYS_CRONSERVICE_PORT',
-        "cronversion":"SYS_CRONSERVICE_VERSION",
+        "cronurl": "SYS_SCHEDULEWORKER_HOST",
+        "cronport": 'SYS_SCHEDULEWORKER_PORT',
+        "cronversion":"SYS_SCHEDULEWORKER_VERSION"
     }
 };
 
