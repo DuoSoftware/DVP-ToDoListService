@@ -1,0 +1,33 @@
+{
+  "name": "dvp-todolistservice",
+  "version": "1.0.0",
+  "description": "Common service to create to do list",
+  "main": "app.js",
+  "dependencies": {
+    "dvp-mongomodels": "^1.6.9",
+    "dvp-common": "^0.4.5",
+    "moment": "^2.14.1",
+    "mongoose": "^4.5.9",
+    "config": "^1.21.0",
+    "stringformat": "^0.0.5",
+    "restify-jwt": "^0.4.0",
+    "util": "^0.10.3",
+    "request": "^2.74.0",
+    "validator": "^5.5.0",
+    "restify": "^4.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DuoSoftware/DVP-ToDoListService.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DuoSoftware/DVP-ToDoListService/issues"
+  },
+  "homepage": "https://github.com/DuoSoftware/DVP-ToDoListService#readme"
+}
