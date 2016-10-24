@@ -5,7 +5,7 @@
 #RUN cd /usr/local/src/todolistservice; npm install
 #CMD ["nodejs", "/usr/local/src/todolistservice/app.js"]
 
-##EXPOSE 8872
+#EXPOSE 8872
 
 FROM node:5.10.0
 RUN git clone git://github.com/DuoSoftware/DVP-ToDoListService.git /usr/local/src/todolistservice
