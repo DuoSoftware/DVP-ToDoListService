@@ -57,7 +57,7 @@ mongoose.connect(connectionstring);
 
 server.post('/DVP/API/:version/ToDo', authorization({resource:"todo", action:"write"}), todoservice.CreateToDo);
 server.post('/DVP/API/:version/ToDo/:id/Reminder', authorization({resource:"remind", action:"write"}), todoservice.RemindToDo);
-server.put('/DVP/API/:version/ToDo/:id/Reminder', authorization({resource:"remind", action:"write"}), todoservice.UpdateToDoReminder);
+server.put('/DVP/API/:version/ToDo/:id/Reminder', authorization({resource:"todo", action:"write"}), todoservice.UpdateToDoReminder);
 server.get('/DVP/API/:version/ToDoList', authorization({resource:"todo", action:"read"}), todoservice.GetToDoListActive);
 server.get('/DVP/API/:version/ToDo/:id', authorization({resource:"todo", action:"read"}), todoservice.GetToDoActive);
 server.del('/DVP/API/:version/ToDo/:id', authorization({resource:"todo", action:"delete"}), todoservice.DeleteToDo);

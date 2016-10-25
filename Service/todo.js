@@ -74,7 +74,7 @@ function CreateToDo(req, res){
                                 mainServer = format("http://{0}:{1}/DVP/API/{2}/ToDo/{3}/Reminder", config.LBServer.ip, config.LBServer.port, config.Host.version,obj.id);
 
 
-                            cronservice.RegisterCronJob(company,tenant,due,req.body.id,mainServer,req.user.iss,function(isSuccess){
+                            cronservice.RegisterCronJob(company,tenant,due,req.body.id,mainServer,{iss: req.user.iss},function(isSuccess){
 
                                 if(isSuccess) {
                                     jsonString = messageFormatter.FormatMessage(undefined, "ToDo and cron saved successfully", true, obj);
@@ -107,7 +107,7 @@ function CreateToDo(req, res){
 
 function RemindToDo(req, res){
 
-    logger.debug("DVP-ToDoListService.CreateToDo Internal method ");
+    logger.debug("DVP-ToDoListService.RemindToDo Internal method ");
 
     var company = parseInt(req.user.company);
     var tenant = parseInt(req.user.tenant);
@@ -120,16 +120,26 @@ function RemindToDo(req, res){
             res.end(jsonString);
         }else {
             if (obj&&req.body&& req.body.CallbackData) {
-                jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Successful", true, obj);
-                notification.InitiateNotification(obj.id, tenant,company,obj.title,req.body.CallbackData,function(issuccess){
 
-                    if(issuccess){
-                        jsonString = messageFormatter.FormatMessage(undefined, "Send Notification Success", true, undefined);
-                    }else{
-                        jsonString = messageFormatter.FormatMessage(undefined, "Send Notification failed", false, undefined);
-                    }
+                var cbdata = JSON.parse(req.body.CallbackData)
+
+                if(cbdata && cbdata.iss) {
+
+                    jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Successful", true, obj);
+                    notification.InitiateNotification(obj.id, tenant, company, obj.title, cbdata.iss, function (issuccess) {
+
+                        if (issuccess) {
+                            jsonString = messageFormatter.FormatMessage(undefined, "Send Notification Success", true, undefined);
+                        } else {
+                            jsonString = messageFormatter.FormatMessage(undefined, "Send Notification failed", false, undefined);
+                        }
+                        res.end(jsonString);
+                    });
+                }else{
+
+                    jsonString = messageFormatter.FormatMessage(undefined, "Callback data issue", false, undefined);
                     res.end(jsonString);
-                })
+                }
 
             }else{
                 jsonString = messageFormatter.FormatMessage(undefined, "No ToDo entries Found", false, undefined);
@@ -411,7 +421,7 @@ function UpdateToDoReminder(req, res){
                                         mainServer = format("http://{0}:{1}/DVP/API/{2}/ToDo/{3}/Reminder", config.LBServer.ip, config.LBServer.port, config.Host.version,obj.id);
 
 
-                                    cronservice.RegisterCronJob(company,tenant,due,req.body.id,mainServer,req.user.iss,function(isSuccess){
+                                    cronservice.RegisterCronJob(company,tenant,due,req.body.id,mainServer,{iss: req.user.iss},function(isSuccess){
 
                                         if(isSuccess) {
                                             jsonString = messageFormatter.FormatMessage(undefined, "ToDo and cron saved successfully", true, obj);
@@ -520,7 +530,7 @@ function UpdateToDoSnooze(req, res){
                                 mainServer = format("http://{0}:{1}/DVP/API/{2}/ToDo/{3}/Reminder", config.LBServer.ip, config.LBServer.port, config.Host.version, obj.id);
 
 
-                            cronservice.RegisterCronJob(company, tenant, time.toISOString(), req.params.id, mainServer, req.user.iss, function (isSuccess) {
+                            cronservice.RegisterCronJob(company, tenant, time.toISOString(), req.params.id, mainServer, {iss: req.user.iss}, function (isSuccess) {
 
                                 if (isSuccess) {
                                     jsonString = messageFormatter.FormatMessage(undefined, "ToDo and cron saved successfully", true, obj);
