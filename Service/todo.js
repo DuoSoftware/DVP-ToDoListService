@@ -124,20 +124,11 @@ function RemindToDo(req, res){
                 notification.InitiateNotification(obj.id, tenant,company,obj.title,req.body.CallbackData,function(issuccess){
 
                     if(issuccess){
-
                         jsonString = messageFormatter.FormatMessage(undefined, "Send Notification Success", true, undefined);
-
-
-
                     }else{
-
                         jsonString = messageFormatter.FormatMessage(undefined, "Send Notification failed", false, undefined);
-
                     }
-
                     res.end(jsonString);
-
-
                 })
 
             }else{
@@ -166,7 +157,8 @@ function GetToDoListActive(req, res){
         else {
             if (user) {
 
-                ToDo.find({owner: user.id, check: false, company: company, tenant: tenant}, function(err, obj) {
+                //check: false,
+                ToDo.find({owner: user.id, company: company, tenant: tenant}, function(err, obj) {
                     if (err) {
                         jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Failed", false, undefined);
                     }else {
@@ -399,7 +391,7 @@ function UpdateToDoReminder(req, res){
         else {
             if (user && due) {
 
-                ToDo.findOneAndUpdate({_id: req.params.id, owner: user.id, company: company, tenant: tenant}, {due_at: due},function(err, obj) {
+                ToDo.findOneAndUpdate({_id: req.params.id, owner: user.id, company: company, tenant: tenant}, {due_at: due}, {new : true},function(err, obj) {
                     if (err) {
                         jsonString = messageFormatter.FormatMessage(err, "Update ToDo Failed", false, undefined);
                         res.end(jsonString);
