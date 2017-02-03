@@ -125,7 +125,7 @@ function RemindToDo(req, res){
 
             if (obj&&req.body&& req.body) {
 
-                var cbdata = JSON.parse(req.body);
+                var cbdata = req.body;
                 console.log(cbdata);
 
 
