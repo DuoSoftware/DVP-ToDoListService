@@ -119,9 +119,15 @@ function RemindToDo(req, res){
             jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Failed", false, undefined);
             res.end(jsonString);
         }else {
+
+            console.log(obj);
+            console.log(req.body);
+
             if (obj&&req.body&& req.body.CallbackData) {
 
-                var cbdata = JSON.parse(req.body.CallbackData)
+                var cbdata = JSON.parse(req.body.CallbackData);
+                console.log(cbdata);
+
 
                 if(cbdata && cbdata.iss) {
 
