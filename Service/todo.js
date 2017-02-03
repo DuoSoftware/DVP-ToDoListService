@@ -421,7 +421,7 @@ function UpdateToDoReminder(req, res){
                                         mainServer = format("http://{0}:{1}/DVP/API/{2}/ToDo/{3}/Reminder", config.LBServer.ip, config.LBServer.port, config.Host.version,obj.id);
 
 
-                                    cronservice.RegisterCronJob(company,tenant,due,req.body.id,mainServer,JSON.stringify({iss: req.user.iss}),function(isSuccess){
+                                    cronservice.RegisterCronJob(company,tenant,due,req.params.id,mainServer,JSON.stringify({iss: req.user.iss}),function(isSuccess){
 
                                         if(isSuccess) {
                                             jsonString = messageFormatter.FormatMessage(undefined, "ToDo and cron saved successfully", true, obj);
