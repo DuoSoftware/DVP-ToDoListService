@@ -85,7 +85,8 @@ module.exports = {
       "notificationServicePort": "8089",
       "notificationServiceVersion": "1.0.0.0",
 
-      "cronurl": "scheduleworker.app.veery.cloud",
+      "cronurl": "192.168.0.10",
+          //"scheduleworker.app.veery.cloud",
       "cronport": '8080',
       "cronversion":"1.0.0.0",
 
