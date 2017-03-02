@@ -74,7 +74,7 @@ function CreateToDo(req, res){
                                 mainServer = format("http://{0}:{1}/DVP/API/{2}/ToDo/{3}/Reminder", config.LBServer.ip, config.LBServer.port, config.Host.version,obj.id);
 
 
-                            cronservice.RegisterCronJob(company,tenant,due,req.body.id,mainServer,JSON.stringify({iss: req.user.iss}),function(isSuccess){
+                            cronservice.RegisterCronJob(company,tenant,due,obj._id,mainServer,JSON.stringify({iss: req.user.iss}),function(isSuccess){
 
                                 if(isSuccess) {
                                     jsonString = messageFormatter.FormatMessage(undefined, "ToDo and cron saved successfully", true, obj);
@@ -119,9 +119,15 @@ function RemindToDo(req, res){
             jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Failed", false, undefined);
             res.end(jsonString);
         }else {
-            if (obj&&req.body&& req.body.CallbackData) {
 
-                var cbdata = JSON.parse(req.body.CallbackData)
+            console.log(obj);
+            console.log(req.body);
+
+            if (obj&&req.body&& req.body) {
+
+                var cbdata = req.body;
+                console.log(cbdata);
+
 
                 if(cbdata && cbdata.iss) {
 
@@ -421,7 +427,7 @@ function UpdateToDoReminder(req, res){
                                         mainServer = format("http://{0}:{1}/DVP/API/{2}/ToDo/{3}/Reminder", config.LBServer.ip, config.LBServer.port, config.Host.version,obj.id);
 
 
-                                    cronservice.RegisterCronJob(company,tenant,due,req.body.id,mainServer,JSON.stringify({iss: req.user.iss}),function(isSuccess){
+                                    cronservice.RegisterCronJob(company,tenant,due,req.params.id,mainServer,JSON.stringify({iss: req.user.iss}),function(isSuccess){
 
                                         if(isSuccess) {
                                             jsonString = messageFormatter.FormatMessage(undefined, "ToDo and cron saved successfully", true, obj);

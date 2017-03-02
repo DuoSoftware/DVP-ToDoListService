@@ -68,9 +68,9 @@ function DestroyCronJob(company, tenant, id, cb){
     if((config.Services && config.Services.cronurl && config.Services.cronport && config.Services.cronversion)) {
 
 
-        var cronURL = format("http://{0}/DVP/API/{1}/Cron/{2}/Action/{3}", config.Services.cronurl, config.Services.cronversion,id,"destroy");
+        var cronURL = format("http://{0}/DVP/API/{1}/Cron/Reference/{2}/Action/{3}", config.Services.cronurl, config.Services.cronversion,id,"destroy");
         if (validator.isIP(config.Services.cronurl))
-            cronURL = format("http://{0}:{1}/DVP/API/{2}/Cron/{3}/Action/{4}", config.Services.cronurl, config.Services.cronport, config.Services.cronversion,id,"destroy");
+            cronURL = format("http://{0}:{1}/DVP/API/{2}/Cron/Reference/{3}/Action/{4}", config.Services.cronurl, config.Services.cronport, config.Services.cronversion,id,"destroy");
 
 
         logger.debug("Calling cron destroy service URL %s", cronURL);
@@ -80,7 +80,8 @@ function DestroyCronJob(company, tenant, id, cb){
             headers: {
                 authorization: "bearer "+config.Services.accessToken,
                 companyinfo: format("{0}:{1}", tenant, company)
-            }
+            },
+            json: {}
 
         }, function (_error, _response, datax) {
 
