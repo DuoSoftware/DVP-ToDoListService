@@ -28,9 +28,15 @@ function CreateToDo(req, res){
     var tenant = parseInt(req.user.tenant);
     var time = new Date().toISOString();
     var due;
+    var extrenal_user;
     if(req.body.due_at)
      due = new Date(req.body.due_at).toISOString();
     var jsonString;
+
+    if(req.body.external_user)
+    {
+        external_user=req.body.external_user;
+    }
 
 
     User.findOne({username: req.user.iss, company: company, tenant: tenant}, function (err, user) {
@@ -55,6 +61,7 @@ function CreateToDo(req, res){
                     note: req.body.note,
                     due_at: due,
                     owner: user.id,
+                    external_user:external_user
 
 
                 });
@@ -132,7 +139,20 @@ function RemindToDo(req, res){
                 if(cbdata && cbdata.iss) {
 
                     jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Successful", true, obj);
-                    notification.InitiateNotification(obj.id, tenant, company, obj.title, cbdata.iss, function (issuccess) {
+
+                    var msgObj=
+                        {
+                            title:obj.title,
+                            Message:obj.note,
+
+                        }
+
+                        if(obj.external_user)
+                        {
+                            msgObj.external_user=obj.external_user;
+                        }
+
+                    notification.InitiateNotification(obj.id, tenant, company, msgObj, cbdata.iss, function (issuccess) {
 
                         if (issuccess) {
                             jsonString = messageFormatter.FormatMessage(undefined, "Send Notification Success", true, undefined);

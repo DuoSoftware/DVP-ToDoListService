@@ -16,10 +16,11 @@ function InitiateNotification( id,tenant, company, message,iss, cb){
         var nData = {
             From: "ToDo Service",
             To: iss,
-            Message: JSON.stringify(message),
+            Message: message,
             Direction: "STATELESS",
             CallbackURL: "",
             Ref: ""
+
         };
 
 

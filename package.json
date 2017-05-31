@@ -4,17 +4,17 @@
   "description": "Common service to create to do list",
   "main": "app.js",
   "dependencies": {
-    "dvp-mongomodels": "^1.6.9",
+    "config": "^1.21.0",
     "dvp-common": "^0.4.5",
+    "dvp-mongomodels": "^4.8.15",
     "moment": "^2.14.1",
     "mongoose": "^4.5.9",
-    "config": "^1.21.0",
-    "stringformat": "^0.0.5",
-    "restify-jwt": "^0.4.0",
-    "util": "^0.10.3",
     "request": "^2.74.0",
-    "validator": "^5.5.0",
-    "restify": "^4.1.1"
+    "restify": "^4.1.1",
+    "restify-jwt": "^0.4.0",
+    "stringformat": "^0.0.5",
+    "util": "^0.10.3",
+    "validator": "^5.5.0"
   },
   "devDependencies": {},
   "scripts": {
