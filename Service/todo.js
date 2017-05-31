@@ -28,7 +28,7 @@ function CreateToDo(req, res){
     var tenant = parseInt(req.user.tenant);
     var time = new Date().toISOString();
     var due;
-    var extrenal_user;
+    var external_user;
     if(req.body.due_at)
      due = new Date(req.body.due_at).toISOString();
     var jsonString;
@@ -143,7 +143,7 @@ function RemindToDo(req, res){
                     var msgObj=
                         {
                             title:obj.title,
-                            Message:obj.note,
+                            Message:obj.note
 
                         }
 
