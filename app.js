@@ -138,6 +138,7 @@ server.del('/DVP/API/:version/ToDo/:id', authorization({resource:"todo", action:
 server.put('/DVP/API/:version/ToDo/:id/Check', authorization({resource:"todo", action:"write"}), todoservice.UpdateToDoCheck);
 server.put('/DVP/API/:version/ToDo/:id/Note', authorization({resource:"todo", action:"write"}), todoservice.UpdateToDoNote);
 server.put('/DVP/API/:version/ToDo/:id/Snooze/:time', authorization({resource:"todo", action:"write"}), todoservice.UpdateToDoSnooze);
+server.get('/DVP/API/:version/user/:id/ToDoList', authorization({resource:"todo", action:"read"}), todoservice.GetUserToDoList);
 
 server.listen(port, function () {
 
