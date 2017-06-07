@@ -151,6 +151,10 @@ function RemindToDo(req, res){
                         {
                             msgObj.external_user=obj.external_user;
                         }
+                    if(obj.due_at)
+                    {
+                        msgObj.due_at=new Date(obj.due_at).toISOString();
+                    }
 
                     notification.InitiateNotification(obj.id, tenant, company, msgObj, cbdata.iss, function (issuccess) {
 
