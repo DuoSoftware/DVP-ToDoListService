@@ -19,7 +19,8 @@ function InitiateNotification( id,tenant, company, message,iss, cb){
             Message: message,
             Direction: "STATELESS",
             CallbackURL: "",
-            Ref: ""
+            Ref: "",
+            isPersist:true
 
         };
 
