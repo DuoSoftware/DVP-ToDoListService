@@ -14,7 +14,7 @@ function InitiateNotification( id,tenant, company, message,iss, cb){
     if((config.Services && config.Services.notificationServiceHost && config.Services.notificationServicePort && config.Services.notificationServiceVersion)) {
 
         var nData = {
-            From: "ToDo Service",
+            From: "Appointment Reminder",
             To: iss,
             Message: message,
             Direction: "STATELESS",
