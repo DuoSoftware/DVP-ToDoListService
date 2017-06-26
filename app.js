@@ -35,7 +35,9 @@ var mongoreplicaset= config.Mongo.replicaset;
 
 var mongoose = require('mongoose');
 var connectionstring = '';
+mongoip = mongoip.split(',');
 if(util.isArray(mongoip)){
+     if(mongoip.length > 1){    
 
     mongoip.forEach(function(item){
         connectionstring += util.format('%s:%d,',item,mongoport)
@@ -47,11 +49,17 @@ if(util.isArray(mongoip)){
     if(mongoreplicaset){
         connectionstring = util.format('%s?replicaSet=%s',connectionstring,mongoreplicaset) ;
     }
+     }
+    else
+    {
+        connectionstring = util.format('mongodb://%s:%s@%s:%d/%s',mongouser,mongopass,mongoip[0],mongoport,mongodb);
+    }
 }else{
 
-    connectionstring = util.format('mongodb://%s:%s@%s:%d/%s',mongouser,mongopass,mongoip,mongoport,mongodb)
+    connectionstring = util.format('mongodb://%s:%s@%s:%d/%s',mongouser,mongopass,mongoip,mongoport,mongodb);
 }
 
+console.log(connectionstring);
 
 mongoose.connect(connectionstring,{server:{auto_reconnect:true}});
 
@@ -130,6 +138,7 @@ server.del('/DVP/API/:version/ToDo/:id', authorization({resource:"todo", action:
 server.put('/DVP/API/:version/ToDo/:id/Check', authorization({resource:"todo", action:"write"}), todoservice.UpdateToDoCheck);
 server.put('/DVP/API/:version/ToDo/:id/Note', authorization({resource:"todo", action:"write"}), todoservice.UpdateToDoNote);
 server.put('/DVP/API/:version/ToDo/:id/Snooze/:time', authorization({resource:"todo", action:"write"}), todoservice.UpdateToDoSnooze);
+server.get('/DVP/API/:version/user/:id/ToDoList', authorization({resource:"todo", action:"read"}), todoservice.GetUserToDoList);
 
 server.listen(port, function () {
 

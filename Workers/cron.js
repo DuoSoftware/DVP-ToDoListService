@@ -47,7 +47,7 @@ function RegisterCronJob(company, tenant, date, id, cburl, cbdata, cb){
 
                 }else{
 
-                    logger.error("There is an error in  cron registration for this");
+                    logger.error("There is an error in  cron registration for this ",_error);
                     return cb(false,{});
 
 

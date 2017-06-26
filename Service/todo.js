@@ -28,15 +28,21 @@ function CreateToDo(req, res){
     var tenant = parseInt(req.user.tenant);
     var time = new Date().toISOString();
     var due;
+    var external_user;
     if(req.body.due_at)
      due = new Date(req.body.due_at).toISOString();
     var jsonString;
+
+    if(req.body.external_user)
+    {
+        external_user=req.body.external_user;
+    }
 
 
     User.findOne({username: req.user.iss, company: company, tenant: tenant}, function (err, user) {
         if (err) {
 
-            jsonString = messageFormatter.FormatMessage(err, "Get User Failed", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "Failed to load users", false, undefined);
             res.end(jsonString);
 
         } else {
@@ -55,18 +61,19 @@ function CreateToDo(req, res){
                     note: req.body.note,
                     due_at: due,
                     owner: user.id,
+                    external_user:external_user
 
 
                 });
 
                 todo.save(function (err, obj) {
                     if (err) {
-                        jsonString = messageFormatter.FormatMessage(err, "To Do Item creation failed", false, undefined);
+                        jsonString = messageFormatter.FormatMessage(err, "Error in saving new Todo", false, undefined);
                         res.end(jsonString);
                     }
                     else {
 
-                        if(req.body.due_at){
+                        if(due){
 
                             var mainServer = format("http://{0}/DVP/API/{1}/ToDo/{2}/Reminder", config.LBServer.ip, config.Host.version, obj.id);
 
@@ -81,7 +88,7 @@ function CreateToDo(req, res){
                                 }
                                 else
                                 {
-                                    jsonString = messageFormatter.FormatMessage(undefined, "ToDo saved but cron failed", false, obj);
+                                    jsonString = messageFormatter.FormatMessage(undefined, "ToDo saved but cron failed to save", false, obj);
                                 }
                                 res.end(jsonString);
 
@@ -98,7 +105,7 @@ function CreateToDo(req, res){
 
             } else {
 
-                jsonString = messageFormatter.FormatMessage(err, "Get User Failed", false, undefined);
+                jsonString = messageFormatter.FormatMessage(err, "Error in loading users", false, undefined);
                 res.end(jsonString);
             }
         }
@@ -116,7 +123,7 @@ function RemindToDo(req, res){
 
     ToDo.findOne({_id: req.params.id, check: false, company: company, tenant: tenant}, function(err, obj) {
         if (err) {
-            jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Failed", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "Searching Todo failed", false, undefined);
             res.end(jsonString);
         }else {
 
@@ -131,24 +138,41 @@ function RemindToDo(req, res){
 
                 if(cbdata && cbdata.iss) {
 
-                    jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Successful", true, obj);
-                    notification.InitiateNotification(obj.id, tenant, company, obj.title, cbdata.iss, function (issuccess) {
+                    jsonString = messageFormatter.FormatMessage(err, "Todo record found", true, obj);
+
+                    var msgObj=
+                        {
+                            title:obj.title,
+                            Message:obj.note
+
+                        }
+
+                        if(obj.external_user)
+                        {
+                            msgObj.external_user=obj.external_user;
+                        }
+                    if(obj.due_at)
+                    {
+                        msgObj.due_at=new Date(obj.due_at).toISOString();
+                    }
+
+                    notification.InitiateNotification(obj.id, tenant, company, msgObj, cbdata.iss, function (issuccess) {
 
                         if (issuccess) {
-                            jsonString = messageFormatter.FormatMessage(undefined, "Send Notification Success", true, undefined);
+                            jsonString = messageFormatter.FormatMessage(undefined, "Notifications sent successfully", true, undefined);
                         } else {
-                            jsonString = messageFormatter.FormatMessage(undefined, "Send Notification failed", false, undefined);
+                            jsonString = messageFormatter.FormatMessage(undefined, "Failed to send notifications", false, undefined);
                         }
                         res.end(jsonString);
                     });
                 }else{
 
-                    jsonString = messageFormatter.FormatMessage(undefined, "Callback data issue", false, undefined);
+                    jsonString = messageFormatter.FormatMessage(undefined, "Invalid callback data found", false, undefined);
                     res.end(jsonString);
                 }
 
             }else{
-                jsonString = messageFormatter.FormatMessage(undefined, "No ToDo entries Found", false, undefined);
+                jsonString = messageFormatter.FormatMessage(undefined, "Invalid data provided", false, undefined);
                 res.end(jsonString);
             }
         }
@@ -167,7 +191,7 @@ function GetToDoListActive(req, res){
 
     User.findOne({username: req.user.iss, company: company, tenant: tenant}, function (err, user) {
         if (err) {
-            jsonString = messageFormatter.FormatMessage(err, "Get User Failed", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "User found", false, undefined);
             res.end(jsonString);
         }
         else {
@@ -176,12 +200,12 @@ function GetToDoListActive(req, res){
                 //check: false,
                 ToDo.find({owner: user.id, company: company, tenant: tenant}, function(err, obj) {
                     if (err) {
-                        jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Failed", false, undefined);
+                        jsonString = messageFormatter.FormatMessage(err, "Error in searching Todo List", false, undefined);
                     }else {
                         if (obj) {
-                            jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Successful", true, obj);
+                            jsonString = messageFormatter.FormatMessage(err, "Active Todo records found", true, obj);
                         }else{
-                            jsonString = messageFormatter.FormatMessage(undefined, "No ToDo entries Found", false, undefined);
+                            jsonString = messageFormatter.FormatMessage(undefined, "No Active Todo records found ", false, undefined);
                         }
                     }
                     res.end(jsonString);
@@ -189,7 +213,7 @@ function GetToDoListActive(req, res){
 
             }
             else {
-                jsonString = messageFormatter.FormatMessage(undefined, "Get User Failed", false, undefined);
+                jsonString = messageFormatter.FormatMessage(undefined, "Error in searching user", false, undefined);
                 res.end(jsonString);
             }
         }
@@ -215,10 +239,10 @@ function GetToDoActive(req, res){
 
                 ToDo.findOne({owner: user.id, _id:req.params.id, check: false, company: company, tenant: tenant}, function(err, obj) {
                     if (err) {
-                        jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Failed", false, undefined);
+                        jsonString = messageFormatter.FormatMessage(err, "Error in searching Todo record", false, undefined);
                     }else {
                         if (obj) {
-                            jsonString = messageFormatter.FormatMessage(err, "Get ToDo entries Successful", true, obj);
+                            jsonString = messageFormatter.FormatMessage(err, "Todo records found", true, obj);
                         }else{
                             jsonString = messageFormatter.FormatMessage(undefined, "No ToDo entries Found", false, undefined);
                         }
@@ -228,7 +252,7 @@ function GetToDoActive(req, res){
 
             }
             else {
-                jsonString = messageFormatter.FormatMessage(undefined, "Get User Failed", false, undefined);
+                jsonString = messageFormatter.FormatMessage(undefined, "No user found", false, undefined);
                 res.end(jsonString);
             }
         }
@@ -401,7 +425,7 @@ function UpdateToDoReminder(req, res){
 
     User.findOne({username: req.user.iss, company: company, tenant: tenant}, function (err, user) {
         if (err) {
-            jsonString = messageFormatter.FormatMessage(err, "Get User Failed", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "Error is searching Users", false, undefined);
             res.end(jsonString);
         }
         else {
@@ -409,11 +433,11 @@ function UpdateToDoReminder(req, res){
 
                 ToDo.findOneAndUpdate({_id: req.params.id, owner: user.id, company: company, tenant: tenant}, {due_at: due}, {new : true},function(err, obj) {
                     if (err) {
-                        jsonString = messageFormatter.FormatMessage(err, "Update ToDo Failed", false, undefined);
+                        jsonString = messageFormatter.FormatMessage(err, "Failed to update Note", false, undefined);
                         res.end(jsonString);
                     }else {
                         if (obj) {
-                            jsonString = messageFormatter.FormatMessage(err, "Update ToDo Successful", true, obj);
+                            jsonString = messageFormatter.FormatMessage(err, "Note updated successfully", true, obj);
 
                             if(obj.due_at) {
 
@@ -430,36 +454,36 @@ function UpdateToDoReminder(req, res){
                                     cronservice.RegisterCronJob(company,tenant,due,req.params.id,mainServer,JSON.stringify({iss: req.user.iss}),function(isSuccess){
 
                                         if(isSuccess) {
-                                            jsonString = messageFormatter.FormatMessage(undefined, "ToDo and cron saved successfully", true, obj);
+                                            jsonString = messageFormatter.FormatMessage(undefined, "Note and Schedule saved successfully", true, obj);
                                         }
                                         else
                                         {
-                                            jsonString = messageFormatter.FormatMessage(undefined, "ToDo saved but cron failed", false, obj);
+                                            jsonString = messageFormatter.FormatMessage(undefined, "Note saved but error in adding schedule", false, obj);
                                         }
                                         res.end(jsonString);
 
                                     });
                                 }else {
-                                    jsonString = messageFormatter.FormatMessage(undefined, "Checked ToDo Successful but due already passed ", false, obj);
+                                    jsonString = messageFormatter.FormatMessage(undefined, "Please insert a valid time ", false, obj);
                                     res.end(jsonString);
                                 }
 
                             }else{
 
-                                jsonString = messageFormatter.FormatMessage(undefined, "Checked ToDo Successful no due", true, obj);
+                                jsonString = messageFormatter.FormatMessage(undefined, "No time due record found", true, obj);
                                 res.end(jsonString);
 
                             }
 
                         }else{
-                            jsonString = messageFormatter.FormatMessage(undefined, "No ToDo Found", false, undefined);
+                            jsonString = messageFormatter.FormatMessage(undefined, "No note Found", false, undefined);
                             res.end(jsonString);
                         }
                     }
                 });
             }
             else {
-                jsonString = messageFormatter.FormatMessage(undefined, "Get User Failed Or due date issue", false, undefined);
+                jsonString = messageFormatter.FormatMessage(undefined, "Invalid due date found or Error in searching user ", false, undefined);
                 res.end(jsonString);
             }
         }
@@ -567,6 +591,39 @@ function UpdateToDoSnooze(req, res){
 
 };
 
+function GetUserToDoList(req, res){
+
+
+    logger.debug("DVP-ToDoListService.GetUserToDoList Internal method ");
+    var company = parseInt(req.user.company);
+    var tenant = parseInt(req.user.tenant);
+    var jsonString;
+
+    if(req.params.id)
+    {
+        ToDo.find({external_user: req.params.id, company: company, tenant: tenant}, function(err, obj) {
+            if (err) {
+                jsonString = messageFormatter.FormatMessage(err, "Error in searching users's Todo List ", false, undefined);
+            }else {
+                if (obj) {
+                    jsonString = messageFormatter.FormatMessage(err, "User's Todo list found", true, obj);
+                }else{
+                    jsonString = messageFormatter.FormatMessage(undefined, "No To do entries for user", false, undefined);
+                }
+            }
+            res.end(jsonString);
+        });
+    }
+    else
+    {
+        jsonString = messageFormatter.FormatMessage(new Error("Invalid user details provided"), "Invalid user data provided", false, undefined);
+        res.end(jsonString);
+    }
+                //check: false,
+
+
+
+};
 
 
 module.exports.CreateToDo = CreateToDo;
@@ -578,3 +635,4 @@ module.exports.UpdateToDoNote = UpdateToDoNote;
 module.exports.UpdateToDoSnooze = UpdateToDoSnooze;
 module.exports.RemindToDo = RemindToDo;
 module.exports.UpdateToDoReminder =UpdateToDoReminder;
+module.exports.GetUserToDoList =GetUserToDoList;
