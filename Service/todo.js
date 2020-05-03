@@ -1,7 +1,6 @@
 /**
  * Created by Sukitha on 8/22/2016.
  */
-var mongoose = require('mongoose');
 var moment = require("moment");
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var ToDo = require('dvp-mongomodels/model/ToDo').ToDo;
@@ -12,12 +11,6 @@ var config = require('config');
 var notification = require('../Workers/notification');
 var format = require("stringformat");
 var validator = require('validator');
-
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
-
-
-//console.log(ToDo.schema.paths);
 
 
 function CreateToDo(req, res){
