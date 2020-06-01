@@ -1,9 +1,9 @@
 var restify = require('restify');
-var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
+var logger = require('dvp-common-lite/LogHandler/CommonLogHandler.js').logger;
 var config = require('config');
 var jwt = require('restify-jwt');
-var secret = require('dvp-common/Authentication/Secret.js');
-var authorization = require('dvp-common/Authentication/Authorization.js');
+var secret = require('dvp-common-lite/Authentication/Secret.js');
+var authorization = require('dvp-common-lite/Authentication/Authorization.js');
 var todoservice = require('./Service/todo');
 var util = require('util');
 var port = config.Host.port || 3000;

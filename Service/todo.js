@@ -2,10 +2,10 @@
  * Created by Sukitha on 8/22/2016.
  */
 var moment = require("moment");
-var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
+var logger = require('dvp-common-lite/LogHandler/CommonLogHandler.js').logger;
 var ToDo = require('dvp-mongomodels/model/ToDo').ToDo;
 var User = require('dvp-mongomodels/model/User');
-var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
+var messageFormatter = require('dvp-common-lite/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var cronservice = require('../Workers/cron');
 var config = require('config');
 var notification = require('../Workers/notification');

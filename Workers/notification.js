@@ -6,7 +6,7 @@ var request = require("request");
 var format = require("stringformat");
 var validator = require('validator');
 var config = require('config');
-var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
+var logger = require('dvp-common-lite/LogHandler/CommonLogHandler.js').logger;
 
 
 function InitiateNotification( id,tenant, company, message,iss, cb){
