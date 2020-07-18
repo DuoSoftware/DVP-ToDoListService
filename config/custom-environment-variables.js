@@ -1,13 +1,4 @@
 module.exports = {
-  DB: {
-    Type: "SYS_DATABASE_TYPE",
-    User: "SYS_DATABASE_POSTGRES_USER",
-    Password: "SYS_DATABASE_POSTGRES_PASSWORD",
-    Port: "SYS_SQL_PORT",
-    Host: "SYS_DATABASE_HOST",
-    Database: "SYS_DATABASE_NAME",
-  },
-
   Redis: {
     mode: "SYS_REDIS_MODE",
     ip: "SYS_REDIS_HOST",
@@ -62,7 +53,6 @@ module.exports = {
     cronurl: "SYS_SCHEDULEWORKER_HOST",
     cronport: "SYS_SCHEDULEWORKER_PORT",
     cronversion: "SYS_SCHEDULEWORKER_VERSION",
-    dynamicPort: true,
   },
 };
 

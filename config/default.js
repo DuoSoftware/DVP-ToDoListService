@@ -1,13 +1,4 @@
 module.exports = {
-  DB: {
-    Type: "postgres",
-    User: "",
-    Password: "",
-    Port: 5432,
-    Host: "",
-    Database: "",
-  },
-
   Redis: {
     mode: "instance", //instance, cluster, sentinel
     ip: "",
@@ -39,7 +30,7 @@ module.exports = {
     resource: "cluster",
     vdomain: "127.0.0.1",
     domain: "127.0.0.1",
-    port: "3636",
+    port: "8879",
     version: "1.0",
   },
 
@@ -50,7 +41,7 @@ module.exports = {
 
   Mongo: {
     ip: "",
-    port: "27017",
+    port: "",
     dbname: "",
     password: "",
     user: "",
@@ -66,28 +57,8 @@ module.exports = {
 
   Services: {
     accessToken: "",
-    resourceServiceHost: "",
-    resourceServicePort: "8831",
-    resourceServiceVersion: "1.0.0.0",
-
-    sipuserendpointserviceHost: "",
-    sipuserendpointservicePort: "8831",
-    sipuserendpointserviceVersion: "1.0.0.0",
-
-    clusterconfigserviceHost: "",
-    clusterconfigservicePort: "8831",
-    clusterconfigserviceVersion: "1.0.0.0",
-
-    ardsServiceHost: "127.0.0.1",
-    ardsServicePort: "8828",
-    ardsServiceVersion: "1.0.0.0",
-
-    notificationServiceHost: "127.0.0.1",
-    notificationServicePort: "8089",
-    notificationServiceVersion: "1.0.0.0",
 
     cronurl: "127.0.0.1:8080",
-
     cronport: "8080",
     cronversion: "1.0.0.0",
 
