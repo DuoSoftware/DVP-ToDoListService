@@ -5,6 +5,7 @@ module.exports = {
     port: "SYS_REDIS_PORT",
     user: "SYS_REDIS_USER",
     password: "SYS_REDIS_PASSWORD",
+    redisDB: "SYS_REDIS_DB_CONFIG",
     sentinels: {
       hosts: "SYS_REDIS_SENTINEL_HOSTS",
       port: "SYS_REDIS_SENTINEL_PORT",
@@ -24,13 +25,19 @@ module.exports = {
       name: "SYS_REDIS_SENTINEL_NAME",
     },
   },
-
-  Mongo: {
+  RabbitMQ: {
+    ip: "SYS_RABBITMQ_HOST",
+    port: "SYS_RABBITMQ_PORT",
+    user: "SYS_RABBITMQ_USER",
+    password: "SYS_RABBITMQ_PASSWORD"
+  },
+    Mongo: {
     ip: "SYS_MONGO_HOST",
     port: "SYS_MONGO_PORT",
     dbname: "SYS_MONGO_DB",
     password: "SYS_MONGO_PASSWORD",
     user: "SYS_MONGO_USER",
+    type: "SYS_MONGO_TYPE",
     replicaset: "SYS_MONGO_REPLICASETNAME",
   },
 
@@ -53,6 +60,9 @@ module.exports = {
     cronurl: "SYS_SCHEDULEWORKER_HOST",
     cronport: "SYS_SCHEDULEWORKER_PORT",
     cronversion: "SYS_SCHEDULEWORKER_VERSION",
+    ScheduleWorkerHost:"SYS_SCHEDULEWORKER_HOST",
+    ScheduleWorkerPort: "HOST_SCHEDULEWORKER_PORT",
+    ScheduleWorkerVersion: "HOST_SCHEDULEWORKER_VERSION"
   },
 };
 
