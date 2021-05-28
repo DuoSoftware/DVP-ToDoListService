@@ -4,7 +4,7 @@
 var moment = require("moment");
 var logger = require("dvp-common-lite/LogHandler/CommonLogHandler.js").logger;
 var ToDo = require("dvp-mongomodels/model/ToDo").ToDo;
-var User = require("dvp-mongomodels/model/User");
+var User = require("dvp-mongomodels/model/UserAccount");
 var messageFormatter = require("dvp-common-lite/CommonMessageGenerator/ClientMessageJsonFormatter.js");
 var cronservice = require("../Workers/cron");
 var config = require("config");
@@ -26,9 +26,9 @@ function CreateToDo(req, res) {
   if (req.body.external_user) {
     external_user = req.body.external_user;
   }
-
+  console.log(`Params ${req.user.iss} ${company} ${tenant}`);
   User.findOne(
-    { username: req.user.iss, company: company, tenant: tenant },
+    { user: req.user.iss, company: company, tenant: tenant },
     function (err, user) {
       if (err) {
         jsonString = messageFormatter.FormatMessage(
@@ -236,7 +236,7 @@ function GetToDoListActive(req, res) {
   var jsonString;
 
   User.findOne(
-    { username: req.user.iss, company: company, tenant: tenant },
+    { user: req.user.iss, company: company, tenant: tenant },
     function (err, user) {
       if (err) {
         jsonString = messageFormatter.FormatMessage(
@@ -300,7 +300,7 @@ function GetToDoActive(req, res) {
   var jsonString;
 
   User.findOne(
-    { username: req.user.iss, company: company, tenant: tenant },
+    { user: req.user.iss, company: company, tenant: tenant },
     function (err, user) {
       if (err) {
         jsonString = messageFormatter.FormatMessage(
@@ -369,7 +369,7 @@ function DeleteToDo(req, res) {
   var jsonString;
 
   User.findOne(
-    { username: req.user.iss, company: company, tenant: tenant },
+    { user: req.user.iss, company: company, tenant: tenant },
     function (err, user) {
       if (err) {
         jsonString = messageFormatter.FormatMessage(
@@ -478,7 +478,7 @@ function UpdateToDoCheck(req, res) {
   var jsonString;
 
   User.findOne(
-    { username: req.user.iss, company: company, tenant: tenant },
+    { user: req.user.iss, company: company, tenant: tenant },
     function (err, user) {
       if (err) {
         jsonString = messageFormatter.FormatMessage(
@@ -600,7 +600,7 @@ function UpdateToDoReminder(req, res) {
   var jsonString;
 
   User.findOne(
-    { username: req.user.iss, company: company, tenant: tenant },
+    { user: req.user.iss, company: company, tenant: tenant },
     function (err, user) {
       if (err) {
         jsonString = messageFormatter.FormatMessage(
@@ -740,7 +740,7 @@ function UpdateToDoNote(req, res) {
   var jsonString;
 
   User.findOne(
-    { username: req.user.iss, company: company, tenant: tenant },
+    { user: req.user.iss, company: company, tenant: tenant },
     function (err, user) {
       if (err) {
         jsonString = messageFormatter.FormatMessage(
@@ -809,7 +809,7 @@ function UpdateToDoSnooze(req, res) {
   var jsonString;
 
   User.findOne(
-    { username: req.user.iss, company: company, tenant: tenant },
+    { user: req.user.iss, company: company, tenant: tenant },
     function (err, user) {
       if (err) {
         jsonString = messageFormatter.FormatMessage(
